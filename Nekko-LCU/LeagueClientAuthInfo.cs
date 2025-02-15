@@ -13,4 +13,10 @@ namespace Nekko_LCU
         public string Server { get; set; } = "";
 
     }
+
+
+
+
+
+
 }
