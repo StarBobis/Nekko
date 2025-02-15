@@ -13,7 +13,16 @@
         <MicaBackdrop Kind="BaseAlt"/>
     </Window.SystemBackdrop>
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <NavigationView OpenPaneLength="200"  x:Name="nvSample" ItemInvoked="nvSample_ItemInvoked" IsBackEnabled="False" IsBackButtonVisible="Collapsed">
+
+        <NavigationView.MenuItems>
+            <NavigationViewItem x:Name="NavigationViewItem_HomePage" Icon="Home" Content="主页" Tag="HomePage" />
+            <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯" Tag="HistoryPage" />
+            <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="对局" Tag="BattlePage" />
+        </NavigationView.MenuItems>
+
+        <Frame x:Name="contentFrame"/>
+    </NavigationView>
+
+
 </Window>

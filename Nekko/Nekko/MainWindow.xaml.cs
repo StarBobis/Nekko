@@ -22,6 +22,9 @@ using System.Text.RegularExpressions;
 using Nekko_Core;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Windows.Gaming.Input;
+using Windows.UI.ApplicationSettings;
+using Windows.Web.AtomPub;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,6 +39,40 @@ namespace Nekko
         public MainWindow()
         {
             this.InitializeComponent();
+        }
+
+
+        private void nvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+
+            // 如果点击的是设置按钮，则导航到设置页面
+            if (args.IsSettingsInvoked)
+            {
+                contentFrame.Navigate(typeof(SettingsPage));
+            }
+            else if (args.InvokedItemContainer is NavigationViewItem item)
+            {
+                var pageTag = item.Tag.ToString();
+                Type pageType = null;
+
+                switch (pageTag)
+                {
+                    case "HomePage":
+                        pageType = typeof(HomePage);
+                        break;
+                    case "HistoryPage":
+                        pageType = typeof(HistoryPage);
+                        break;
+                    case "BattlePage":
+                        pageType = typeof(BattlePage);
+                        break;
+                }
+
+                if (pageType != null && contentFrame.Content?.GetType() != pageType)
+                {
+                    contentFrame.Navigate(pageType);
+                }
+            }
         }
 
         private async void myButton_Click(object sender, RoutedEventArgs e)
