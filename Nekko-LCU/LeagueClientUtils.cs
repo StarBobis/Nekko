@@ -8,12 +8,17 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Nekko_Core;
+using Nekko_LCU;
 
 namespace Nekko_LCU
 {
     public class LeagueClientUtils
     {
         
+        /// <summary>
+        /// 获取当前英雄联盟客户端的Port,Token,Server
+        /// </summary>
+        /// <returns></returns>
         public static LeagueClientAuthInfo GetClientInfoByWMIC()
         {
             string command = "wmic process WHERE name='LeagueClientUx.exe' GET commandline";
@@ -40,6 +45,10 @@ namespace Nekko_LCU
             return authInfo;
         }
 
+        /// <summary>
+        /// 获取当前英雄联盟客户端的进程pid
+        /// </summary>
+        /// <returns></returns>
         public static string GetClientPid()
         {
             

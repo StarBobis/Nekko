@@ -19,12 +19,7 @@ using System.Text;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 
-using Nekko_Core;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Windows.Gaming.Input;
-using Windows.UI.ApplicationSettings;
-using Windows.Web.AtomPub;
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,6 +34,13 @@ namespace Nekko
         public MainWindow()
         {
             this.InitializeComponent();
+
+            //默认进入主页界面
+            if (nvSample.MenuItems.Count > 0)
+            {
+                nvSample.SelectedItem = nvSample.MenuItems[0];
+                contentFrame.Navigate(typeof(HomePage));
+            }
         }
 
 
@@ -75,14 +77,6 @@ namespace Nekko
             }
         }
 
-        private async void myButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            SummonerInfo summonerInfo = await LeagueClientUtils.GetCurrentSummonerInfo();
-
-            Debug.WriteLine(summonerInfo.SummonerId);
-            Debug.WriteLine(summonerInfo.DisplayName);
-            Debug.WriteLine(summonerInfo.GameName);
-        }
+        
     }
 }

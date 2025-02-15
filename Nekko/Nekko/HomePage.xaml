@@ -10,6 +10,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <Button Content="Test" Click="myButton_Click"></Button>
     </Grid>
 </Page>
