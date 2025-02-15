@@ -37,7 +37,7 @@ namespace Nekko
 
             this.AppWindow.SetIcon("Assets/Nekko.ico");
 
-            //默认进入主页界面
+            //默认进入主页界面 8
             if (nvSample.MenuItems.Count > 0)
             {
                 nvSample.SelectedItem = nvSample.MenuItems[0];
