@@ -10,6 +10,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.Background>
+            <ImageBrush x:Name="HomeBGImageBrush" Stretch="UniformToFill" ImageSource="Assets/NekkoBackGround.png" />
+        </Grid.Background>
+        
         <Button Content="Test" Click="myButton_Click"></Button>
     </Grid>
 </Page>

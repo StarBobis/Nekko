@@ -35,6 +35,8 @@ namespace Nekko
         {
             this.InitializeComponent();
 
+            this.AppWindow.SetIcon("Assets/Nekko.ico");
+
             //默认进入主页界面
             if (nvSample.MenuItems.Count > 0)
             {
