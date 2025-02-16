@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using Windows.Graphics;
 
 
 
@@ -35,6 +36,13 @@ namespace Nekko
         {
             this.InitializeComponent();
 
+            //设置标题
+            this.Title = "Nekko V1.0.0.1";
+
+            //设置窗口大小
+            this.AppWindow.Resize(new SizeInt32(1000, 643));
+            
+            //设置图标
             this.AppWindow.SetIcon("Assets/Nekko.ico");
 
             //默认进入主页界面 8

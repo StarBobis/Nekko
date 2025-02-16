@@ -83,23 +83,25 @@ namespace Nekko_LCU
 
         public SummonerInfo(string jsonString)
         {
-            var summonerInfo = JsonConvert.DeserializeObject<SummonerInfo>(jsonString);
-            AccountId = summonerInfo.AccountId;
-            DisplayName = summonerInfo.DisplayName;
-            GameName = summonerInfo.GameName;
-            InternalName = summonerInfo.InternalName;
-            NameChangeFlag = summonerInfo.NameChangeFlag;
-            PercentCompleteForNextLevel = summonerInfo.PercentCompleteForNextLevel;
-            Privacy = summonerInfo.Privacy;
-            ProfileIconId = summonerInfo.ProfileIconId;
-            Puuid = summonerInfo.Puuid;
-            SummonerId = summonerInfo.SummonerId;
-            SummonerLevel = summonerInfo.SummonerLevel;
-            TagLine = summonerInfo.TagLine;
-            Unnamed = summonerInfo.Unnamed;
-            XpSinceLastLevel = summonerInfo.XpSinceLastLevel;
-            XpUntilNextLevel = summonerInfo.XpUntilNextLevel;
-            RerollPoints = summonerInfo.RerollPoints;
+            JsonConvert.PopulateObject(jsonString, this);
+
+            //var summonerInfo = JsonConvert.DeserializeObject<SummonerInfo>(jsonString);
+            //AccountId = summonerInfo.AccountId;
+            //DisplayName = summonerInfo.DisplayName;
+            //GameName = summonerInfo.GameName;
+            //InternalName = summonerInfo.InternalName;
+            //NameChangeFlag = summonerInfo.NameChangeFlag;
+            //PercentCompleteForNextLevel = summonerInfo.PercentCompleteForNextLevel;
+            //Privacy = summonerInfo.Privacy;
+            //ProfileIconId = summonerInfo.ProfileIconId;
+            //Puuid = summonerInfo.Puuid;
+            //SummonerId = summonerInfo.SummonerId;
+            //SummonerLevel = summonerInfo.SummonerLevel;
+            //TagLine = summonerInfo.TagLine;
+            //Unnamed = summonerInfo.Unnamed;
+            //XpSinceLastLevel = summonerInfo.XpSinceLastLevel;
+            //XpUntilNextLevel = summonerInfo.XpUntilNextLevel;
+            //RerollPoints = summonerInfo.RerollPoints;
         }
     }
 }

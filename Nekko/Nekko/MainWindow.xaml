@@ -13,16 +13,26 @@
         <MicaBackdrop Kind="BaseAlt"/>
     </Window.SystemBackdrop>
 
-    <NavigationView OpenPaneLength="200"  x:Name="nvSample" ItemInvoked="nvSample_ItemInvoked" IsBackEnabled="False" IsBackButtonVisible="Collapsed">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush x:Name="HomeBGImageBrush" Stretch="UniformToFill" ImageSource="Assets/NekkoBackGround.png" />
+        </Grid.Background>
+        <NavigationView OpenPaneLength="200"  x:Name="nvSample" ItemInvoked="nvSample_ItemInvoked" IsBackEnabled="False" IsBackButtonVisible="Collapsed">
+            <NavigationView.Background>
+                <SolidColorBrush Color="Transparent"/>
+            </NavigationView.Background>
+            
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="NavigationViewItem_HomePage" Icon="Home" Content="主页" Tag="HomePage" />
+                <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯" Tag="HistoryPage" />
+                <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="对局" Tag="BattlePage" />
+            </NavigationView.MenuItems>
 
-        <NavigationView.MenuItems>
-            <NavigationViewItem x:Name="NavigationViewItem_HomePage" Icon="Home" Content="主页" Tag="HomePage" />
-            <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯" Tag="HistoryPage" />
-            <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="对局" Tag="BattlePage" />
-        </NavigationView.MenuItems>
+            <Frame x:Name="contentFrame"/>
+        </NavigationView>
+    </Grid>
 
-        <Frame x:Name="contentFrame"/>
-    </NavigationView>
+
 
 
 </Window>

@@ -7,13 +7,41 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent">
 
     <Grid>
-        <Grid.Background>
-            <ImageBrush x:Name="HomeBGImageBrush" Stretch="UniformToFill" ImageSource="Assets/NekkoBackGround.png" />
-        </Grid.Background>
-        
-        <Button Content="Test" Click="myButton_Click"></Button>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
+            <TextBlock Text="Nekko" FontSize="24" FontWeight="Bold" Foreground="White"/>
+            <TextBlock x:Name="TextBlock_Description" Text="英雄联盟智能战绩分析工具" FontSize="12" Margin="0,5,0,15" Foreground="White" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <Button Click="OpenLinkButtonClick"  Tag="https://www.yuque.com/airde/pri05n?">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Document" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="TextBlock_Documents" Text="Nekko开发文档" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="OpenLinkButtonClick" Tag="https://github.com/StarBobis/Nekko-Release">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="View" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="TextBlock_Github" Text="Github源码" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Click="OpenLinkButtonClick" Tag="https://github.com/StarBobis/Nekko-Release/issues">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Add" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="TextBlock_SubmitIssue" Text="提交issue" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Click="OpenLinkButtonClick" Tag="https://discord.gg/F2dh5ZXX55">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="OtherUser" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="TextBlock_Discord" Text="Discord" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </Page>

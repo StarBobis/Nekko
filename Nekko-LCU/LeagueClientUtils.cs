@@ -113,8 +113,55 @@ namespace Nekko_LCU
 
         }
 
+        /// <summary>
+        /// 通过Puuid查询同个大区的召唤师信息
+        /// </summary>
+        /// <param name="Puuid"></param>
+        /// <returns></returns>
+        public static async Task<SummonerInfo> GetSummonerInfoByPuuid(string Puuid)
+        {
+            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMIC();
 
-        public static async Task GetSummonerGameRecord()
+            using (var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+                {
+                    // 忽略所有证书验证错误
+                    return true;
+                }
+            })
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                // 设置基本认证
+                string credentials = $"riot:{authInfo.Token}";
+                string base64Credentials = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(credentials));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Credentials);
+
+                // 构建URL
+                string url = $"https://127.0.0.1:{authInfo.Port}/lol-summoner/v2/summoners/puuid/{Puuid}";
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                // 确保请求成功
+                response.EnsureSuccessStatusCode();
+
+                // 读取并解析响应内容
+                string responseBody = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(responseBody);
+
+                SummonerInfo summonerInfo = new SummonerInfo(responseBody);
+                return summonerInfo;
+            }
+
+        }
+
+
+        /// <summary>
+        /// 根据召唤师的Puuid查询游戏记录
+        /// </summary>
+        /// <param name="Puuid"></param>
+        /// <returns></returns>
+        public static async Task<GameRecord> GetSummonerGameRecordByPuuid(string Puuid)
         {
             using (var handler = new HttpClientHandler
             {
@@ -127,7 +174,6 @@ namespace Nekko_LCU
 
             using (HttpClient client = new HttpClient(handler))
             {
-                SummonerInfo summonerInfo = await LeagueClientUtils.GetCurrentSummonerInfo();
                 LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMIC();
 
                 // 假设你已经通过其他方式获得了Token和Port
@@ -145,20 +191,32 @@ namespace Nekko_LCU
                 // 获取当前召唤师的信息以获得PUUID
 
                 // 假设我们从召唤师信息中提取了PUUID
-                string puuid = summonerInfo.Puuid;
-
                 // 使用PUUID查询历史战绩
-                HttpResponseMessage historyResponse = await client.GetAsync($"/lol-match-history/v1/products/lol/{puuid}/matches");
+                HttpResponseMessage historyResponse = await client.GetAsync($"/lol-match-history/v1/products/lol/{Puuid}/matches");
                 if (historyResponse.IsSuccessStatusCode)
                 {
                     var historyJson = await historyResponse.Content.ReadAsStringAsync();
+                    GameRecord gameRecord = new GameRecord(historyJson);
                     Debug.WriteLine(historyJson); // 输出历史战绩JSON字符串
+
+                    return gameRecord;
                 }
                 else
                 {
+                    GameRecord gameRecord = new GameRecord();
                     Debug.WriteLine("Failed to get match history.");
+                    return gameRecord;
+
                 }
             }
+
+        }
+
+
+        public static async Task<GameRecord> GetCurrentSummonerGameRecord()
+        {
+            SummonerInfo summonerInfo = await LeagueClientUtils.GetCurrentSummonerInfo();
+            return await GetSummonerGameRecordByPuuid(summonerInfo.Puuid);
         }
 
     }
