@@ -114,7 +114,7 @@ namespace Nekko_LCU
         public ulong LongestTimeSpentLiving { get; set; } = 0;
 
         [JsonProperty("magicDamageDealt")]
-        public ulong MagicDamageDealt { get; set; } = 0;
+        public int MagicDamageDealt { get; set; } = 0;
 
         [JsonProperty("magicDamageDealtToChampions")]
         public ulong MagicDamageDealtToChampions { get; set; } = 0;
@@ -141,80 +141,80 @@ namespace Nekko_LCU
         public ulong PentaKills { get; set; } = 0;
 
         [JsonProperty("perk0")]
-        public ulong Perk0 { get; set; } = 0;
+        public int Perk0 { get; set; } = 0;
 
         [JsonProperty("perk0Var1")]
-        public ulong Perk0Var1 { get; set; } = 0;
+        public int Perk0Var1 { get; set; } = 0;
 
         [JsonProperty("perk0Var2")]
-        public ulong Perk0Var2 { get; set; } = 0;
+        public int Perk0Var2 { get; set; } = 0;
 
         [JsonProperty("perk0Var3")]
-        public ulong Perk0Var3 { get; set; } = 0;
+        public int Perk0Var3 { get; set; } = 0;
 
         [JsonProperty("perk1")]
-        public ulong Perk1 { get; set; } = 0;
+        public int Perk1 { get; set; } = 0;
 
         [JsonProperty("perk1Var1")]
-        public ulong Perk1Var1 { get; set; } = 0;
+        public int Perk1Var1 { get; set; } = 0;
 
         [JsonProperty("perk1Var2")]
-        public ulong Perk1Var2 { get; set; } = 0;
+        public int Perk1Var2 { get; set; } = 0;
 
         [JsonProperty("perk1Var3")]
-        public ulong Perk1Var3 { get; set; } = 0;
+        public int Perk1Var3 { get; set; } = 0;
 
 
         [JsonProperty("perk2")]
-        public ulong Perk2 { get; set; } = 0;
+        public int Perk2 { get; set; } = 0;
 
         [JsonProperty("perk2Var1")]
-        public ulong Perk2Var1 { get; set; } = 0;
+        public int Perk2Var1 { get; set; } = 0;
 
         [JsonProperty("perk2Var2")]
-        public ulong Perk2Var2 { get; set; } = 0;
+        public int Perk2Var2 { get; set; } = 0;
 
         [JsonProperty("perk2Var3")]
-        public ulong Perk2Var3 { get; set; } = 0;
+        public int Perk2Var3 { get; set; } = 0;
 
 
         [JsonProperty("perk3")]
-        public ulong Perk3 { get; set; } = 0;
+        public int Perk3 { get; set; } = 0;
 
         [JsonProperty("perk3Var1")]
-        public ulong Perk3Var1 { get; set; } = 0;
+        public int Perk3Var1 { get; set; } = 0;
 
         [JsonProperty("perk3Var2")]
-        public ulong Perk3Var2 { get; set; } = 0;
+        public int Perk3Var2 { get; set; } = 0;
 
         [JsonProperty("perk3Var3")]
-        public ulong Perk3Var3 { get; set; } = 0;
+        public int Perk3Var3 { get; set; } = 0;
 
 
         [JsonProperty("perk4")]
-        public ulong Perk4 { get; set; } = 0;
+        public int Perk4 { get; set; } = 0;
 
         [JsonProperty("perk4Var1")]
-        public ulong Perk4Var1 { get; set; } = 0;
+        public int Perk4Var1 { get; set; } = 0;
 
         [JsonProperty("perk4Var2")]
-        public ulong Perk4Var2 { get; set; } = 0;
+        public int Perk4Var2 { get; set; } = 0;
 
         [JsonProperty("perk4Var3")]
-        public ulong Perk4Var3 { get; set; } = 0;
+        public int Perk4Var3 { get; set; } = 0;
 
 
         [JsonProperty("perk5")]
-        public ulong Perk5 { get; set; } = 0;
+        public int Perk5 { get; set; } = 0;
 
         [JsonProperty("perk5Var1")]
-        public ulong Perk5Var1 { get; set; } = 0;
+        public int Perk5Var1 { get; set; } = 0;
 
         [JsonProperty("perk5Var2")]
-        public ulong Perk5Var2 { get; set; } = 0;
+        public int Perk5Var2 { get; set; } = 0;
 
         [JsonProperty("perk5Var3")]
-        public ulong Perk5Var3 { get; set; } = 0;
+        public int Perk5Var3 { get; set; } = 0;
 
 
         [JsonProperty("perkPrimaryStyle")]
@@ -224,7 +224,7 @@ namespace Nekko_LCU
         public ulong PerkSubStyle { get; set; } = 0;
 
         [JsonProperty("physicalDamageDealt")]
-        public ulong PhysicalDamageDealt { get; set; } = 0;
+        public int PhysicalDamageDealt { get; set; } = 0;
 
         [JsonProperty("physicalDamageDealtToChampions")]
         public ulong PhysicalDamageDealtToChampions { get; set; } = 0;
@@ -300,7 +300,7 @@ namespace Nekko_LCU
         public ulong TimeCCingOthers { get; set; } = 0;
 
         [JsonProperty("totalDamageDealt")]
-        public ulong TotalDamageDealt { get; set; } = 0;
+        public int TotalDamageDealt { get; set; } = 0;
 
         [JsonProperty("totalDamageDealtToChampions")]
         public ulong TotalDamageDealtToChampions { get; set; } = 0;
@@ -564,6 +564,17 @@ namespace Nekko_LCU
 
         [JsonProperty("teams")]
         public List<Team> Teams { get; set; }
+
+        public GameObject()
+        {
+
+        }
+
+        public GameObject(string jsonString)
+        {
+            JsonConvert.PopulateObject(jsonString, this);
+        }
+
     }
 
     public class GamesObjects

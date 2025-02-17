@@ -23,7 +23,7 @@
                 <Button Click="OpenLinkButtonClick" Tag="https://github.com/StarBobis/Nekko-Release">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="View" Margin="0,0,5,0"/>
-                        <TextBlock x:Name="TextBlock_Github" Text="Github源码" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TextBlock_Github" Text="Github下载地址" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 

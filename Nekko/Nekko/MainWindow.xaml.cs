@@ -40,7 +40,7 @@ namespace Nekko
             this.Title = "Nekko V1.0.0.1";
 
             //设置窗口大小
-            this.AppWindow.Resize(new SizeInt32(1000, 643));
+            this.AppWindow.Resize(new SizeInt32(1400, 888));
             
             //设置图标
             this.AppWindow.SetIcon("Assets/Nekko.ico");

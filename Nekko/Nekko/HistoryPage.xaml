@@ -8,6 +8,27 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="Transparent">
+
+    <Page.Resources>
+        <!-- 定义MenuFlyout作为资源 -->
+        <MenuFlyout x:Key="ItemMenuFlyout">
+            <MenuFlyoutItem x:Name="Menu_BattleDetailInfo" Text="查看对局信息" Click="Menu_BattleDetailInfo_Click" />
+            <!-- 可以继续添加更多的菜单项 -->
+        </MenuFlyout>
+
+        <Style TargetType="ListViewItem" x:Key="ListViewItemStyleWithMenu">
+            <Setter Property="ContextFlyout" Value="{StaticResource ItemMenuFlyout}"/>
+        </Style>
+
+        <!--<Style TargetType="TextBlock" x:Key="DefaultTextBlockStyle">
+            --><!--<Setter Property="FontSize" Value="14"/>
+            
+            <Setter Property="Foreground" Value="Blue"/>--><!--
+            <Setter Property="IsTextSelectionEnabled" Value="True"></Setter>
+            --><!-- 添加更多你想要统一设置的属性 --><!--
+        </Style>-->
+    </Page.Resources>
+    
     <!-- 支持滑条，不然显示不完全 -->
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
@@ -23,31 +44,45 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- 标题栏 -->
-            <TextBlock Grid.Column="0" Grid.Row="0" x:Name="TextBlock_SummonerInfo"
-               Text="Unknown"
-               FontSize="25"
-               FontWeight="SemiBold"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               Margin="0,24,0,10"/>
-            <!-- 调整上下边距 -->
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0,0,0,10">
+                <TextBlock x:Name="TextBlock_SummonerInfo" Text="请开启游戏后刷新此页面" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,24,0,10" />
+                <Button x:Name="Button_Refresh" Content="刷新" Margin="0,28,0,10" Click="Button_Refresh_Click"></Button>
+            </StackPanel>
 
 
             <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0,0,0,10">
                 <TextBlock x:Name="TextBlock_SummonerLevel" Text="召唤师等级: 0"  HorizontalAlignment="Center" Margin="0,0,5,0" FontSize="15" FontWeight="SemiBold"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="0" Grid.Row="2"  x:Name="StackPanel_BasicTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+            <StackPanel Grid.Column="0" Grid.Row="2"  x:Name="StackPanel_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
             <StackPanel Grid.Column="0" Grid.Row="3"  x:Name="StackPanel_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+            <StackPanel Grid.Column="0" Grid.Row="4"  x:Name="StackPanel_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+            
+            <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0,15,0,10">
+                <TextBlock Text="同大区召唤师查询:" Margin="0,5,0,0"></TextBlock>
+                <TextBox x:Name="TextBox_SummonerName" Width="230" ></TextBox>
+                <Button x:Name="Button_SearchSummonerByName"  Content="查询"  HorizontalAlignment="Center" Margin="0,0,0,0" Click="Button_SearchSummonerByName_Click"  />
+                <CheckBox x:Name="CheckBox_OnlyDanShuangPai" Content="只看单双排" Margin="10,0,0,0" Checked="CheckBox_OnlyDanShuangPai_Checked" Unchecked="CheckBox_OnlyDanShuangPai_Unchecked" ></CheckBox>
+                <!--<Button   Content="Test"  HorizontalAlignment="Center" Margin="0,0,0,0"   Click="myButton_Click"/>-->
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0,15,0,10">
+                <Button x:Name="Button_CurrentGameInfo"  Content="查询实时对局数据"  HorizontalAlignment="Center" Margin="0,0,0,0" Click="Button_CurrentGameInfo_Click" />
+                <!--<Button   Content="Test"  HorizontalAlignment="Center" Margin="0,0,0,0"   Click="myButton_Click"/>-->
+            </StackPanel>
 
-            <!-- 贴图信息显示区域 -->
-            <Border Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,20,20,20"
+            <!-- 战绩信息显示区域 -->
+            <Border Grid.Column="0" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,15,20,20"
     BorderBrush="White" BorderThickness="1" CornerRadius="5" >
                 <!-- XAML -->
-                <ListView  x:Name="BattleInfoListView" Width="800" Height="400"  Background="#B3000000">
+                <ListView  x:Name="BattleInfoListView" Width="1100" Height="500"  Background="#B3000000" ItemContainerStyle="{StaticResource ListViewItemStyleWithMenu}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -65,9 +100,9 @@
                                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
                                     <TextBlock VerticalAlignment="Center" Margin="10,10,0,0">
                                         <Run Text="位置:"/>
-                                        <Run Text="{Binding Location}"/>
+                                        <Run Text="{Binding Location}" Foreground="{Binding LocationColor}" />
                                         <Run Text="结果:"/>
-                                        <Run Text="{Binding Win}"/>
+                                        <Run Text="{Binding Win}" Foreground="{Binding WinColor}"/>
                                         <Run Text="  类型:"/>
                                         <Run Text="{Binding GameType}"/>
                                         <Run Text="  战绩K/D/A:"/>
@@ -86,11 +121,11 @@
                                         <Run Text="{Binding CostTime}"/>
                                     </TextBlock>
                                     <TextBlock VerticalAlignment="Center" Margin="10,10,0,0" Foreground="Green">
-                                        <Run Text="夸夸标签: "/>
+                                        <!--<Run Text="夸夸标签: "/>-->
                                         <Run Text="{Binding KuaKuaTag}"/>      
                                     </TextBlock>
                                     <TextBlock VerticalAlignment="Center" Margin="10,10,0,0" Foreground="Red">
-                                        <Run Text="牛马标签: "/>
+                                        <!--<Run Text="牛马标签: "/>-->
                                         <Run Text="{Binding NiuMaTag}"/>   
                                     </TextBlock>
                                 </StackPanel>
@@ -102,13 +137,134 @@
                 </ListView>
             </Border>
             
-            
+            <!--前5位召唤师-->
+            <Border Grid.Column="0" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,15,20,20"
+BorderBrush="White" BorderThickness="1" CornerRadius="5" >
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner1_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner1_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner1_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner1_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="0" Grid.Row="1"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner2_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner2_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner2_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner2_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="0" Grid.Row="2"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner3_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner3_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner3_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner3_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="0" Grid.Row="3"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner4_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner4_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner4_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner4_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="0" Grid.Row="4"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner5_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner5_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner5_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner5_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+            <!--后5位召唤师-->
+            <Border Grid.Column="0" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,15,20,20"
+BorderBrush="White" BorderThickness="1" CornerRadius="5" >
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner6_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner6_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner6_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner6_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner7_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner7_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner7_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner7_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="2"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner8_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner8_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner8_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner8_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="3"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner9_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner9_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner9_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner9_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="4"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner10_Info" FontSize="25" FontWeight="SemiBold" IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner10_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner10_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner10_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
             <!-- 按钮 -->
-                <Button Grid.Column="0" Grid.Row="5"
-            Content="Test"
-            HorizontalAlignment="Center"
-            Margin="0,16,0,24" 
-                     Click="myButton_Click"/>
         </Grid>
 
     </ScrollViewer>

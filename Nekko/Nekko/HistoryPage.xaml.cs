@@ -28,6 +28,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Windows.UI;
 using System.Collections.ObjectModel;
+using System.Reflection.Metadata;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,14 +43,12 @@ namespace Nekko
 
         private ObservableCollection<BattleInfo> BattleInfoCollection = new ObservableCollection<BattleInfo>();
 
-        string TestPuuid = "8835280e-6795-52ee-9e2a-4dd9d8bf0a6b";
 
         public HistoryPage()
         {
             this.InitializeComponent();
 
-            ReadCurrentSummonerInfo();
-            ReadCurrentSummonerGameRecord();
+            Referesh();
 
             BattleInfoListView.ItemsSource = BattleInfoCollection;
 
@@ -57,6 +56,21 @@ namespace Nekko
             //AddTag(StackPanel_BasicTags, "辅助精通", Color.FromArgb(255, 0, 0, 255)); // 蓝色
         }
 
+        public void Referesh()
+        {
+            LeagueClientUtils.GetClientInfoByWMI(true);
+
+            if (TextBox_SummonerName.Text == "")
+            {
+                ReadCurrentSummonerInfo();
+                ReadCurrentSummonerGameRecord();
+            }
+            else
+            {
+                SearchSummonerInfo();
+            }
+           
+        }
 
         private void AddTag(StackPanel stackPanel, string text, Color textColor)
         {
@@ -72,7 +86,7 @@ namespace Nekko
             var border = new Border
             {
                 Child = tag,
-                Background = new SolidColorBrush(Color.FromArgb(127, 200, 200, 200)), // 半透明背景色
+                Background = new SolidColorBrush(Color.FromArgb(188, 0, 0, 0)), // 半透明背景色
                 CornerRadius = new CornerRadius(10), // 圆角半径
                 Margin = new Thickness(2),
                 Padding = new Thickness(2)
@@ -82,161 +96,452 @@ namespace Nekko
             stackPanel.Children.Add(border);
         }
 
-        public async void ReadCurrentSummonerInfo()
+        public void SetCurrentSummonerInfo(SummonerInfo CurrentSummoner)
         {
-            //8835280e-6795-52ee-9e2a-4dd9d8bf0a6b
-            //SummonerInfo CurrentSummoner = await LeagueClientUtils.GetSummonerGameRecordByPuuid(TestPuuid);
-
-            SummonerInfo CurrentSummoner = await LeagueClientUtils.GetCurrentSummonerInfo();
             TextBlock_SummonerInfo.Text = CurrentSummoner.GameName + " #" + CurrentSummoner.TagLine;
 
             int TotalXP = CurrentSummoner.XpSinceLastLevel + CurrentSummoner.XpUntilNextLevel;
             TextBlock_SummonerLevel.Text = "召唤师等级: " + CurrentSummoner.SummonerLevel.ToString() + " 经验值: " + CurrentSummoner.XpSinceLastLevel.ToString() + " / " + TotalXP.ToString();
         }
 
-        public async void ReadCurrentSummonerGameRecord()
+        public async void ReadCurrentSummonerInfo()
         {
+            SummonerInfo CurrentSummoner = await LeagueClientUtils.GetCurrentSummonerInfo();
+            SetCurrentSummonerInfo(CurrentSummoner);
+        }
 
-            GameRecord gameRecord = await LeagueClientUtils.GetCurrentSummonerGameRecord();
-            List<GameObject> gameObjectList = gameRecord.GamesObjects.GameObjectList;
 
-            ulong totalKill = 0;
-            ulong totalAssist = 0;
-            ulong totalDeath = 0;
 
-            BattleInfoCollection.Clear();
+        public static Color GetNumberLimitColor(double InputNumber, double limit1, double limit2, double limit3)
+        {
+            if (InputNumber < limit1)
+            {
+                return Color.FromArgb(255, 255, 0, 0); //红色
+            }
+            else if (InputNumber >= limit1 && InputNumber < limit2)
+            {
+                return Color.FromArgb(255, 255,255, 0); //黄色
+            }
+            else if (InputNumber >= limit2 && InputNumber < limit3)
+            {
+                return Color.FromArgb(255, 0, 255, 0); // 绿色
+            }
+            else
+            {
+                return Color.FromArgb(255, 128, 0, 128); // 紫色
+            }
+        }
+
+        public void SetStackPanelTags(List<GameObject> gameObjectList, StackPanel In_StackPanel_KDATags, StackPanel In_StackPanel_BattleTags, StackPanel In_StackPanel_NiuMaTags)
+        {
+            In_StackPanel_KDATags.Children.Clear();
+            In_StackPanel_BattleTags.Children.Clear();
+            In_StackPanel_NiuMaTags.Children.Clear();
+
+            KDAInfo kdaInfo = new KDAInfo(gameObjectList);
+
+
+            Dictionary<string, int> KuaKuaTagMap = new Dictionary<string, int>();
+            Dictionary<string, int> NiuMaTagMap = new Dictionary<string, int>();
+
+
+            int totalNiumaTag = 0;
+            int totalKuaKuaTag = 0;
+
+            int totalWin = 0;
+            int totalLose = 0;
 
             foreach (GameObject gameobj in gameObjectList)
             {
 
-                Participant participant = gameobj.Participants[0];
-                ParticipantStats participantStats = participant.ParticipantStats;
+                BattleInfo battleInfo = new BattleInfo(gameobj);
 
-                totalKill += participantStats.Kills;
-                totalAssist += participantStats.Assists;
-                totalDeath += participantStats.Deaths;
+                if (battleInfo.Win == "胜利")
+                {
+                    totalWin++;
+                }
+                else
+                {
+                    totalLose++;
+                }
 
+                foreach (string NiumaTag in battleInfo.NiuMaTagList)
+                {
+                    if (NiuMaTagMap.ContainsKey(NiumaTag))
+                    {
+                        NiuMaTagMap[NiumaTag] = NiuMaTagMap[NiumaTag] + 1;
+                    }
+                    else
+                    {
+                        NiuMaTagMap[NiumaTag] = 1;
+                    }
+                    totalNiumaTag++;
+                }
+
+                foreach (string KuaKuaTag in battleInfo.KuaKuaTagList)
+                {
+                    if (KuaKuaTagMap.ContainsKey(KuaKuaTag))
+                    {
+                        KuaKuaTagMap[KuaKuaTag] = KuaKuaTagMap[KuaKuaTag] + 1;
+                    }
+                    else
+                    {
+                        KuaKuaTagMap[KuaKuaTag] = 1;
+                    }
+                    totalKuaKuaTag++;
+
+                }
+            }
+
+            foreach (var pair in KuaKuaTagMap)
+            {
+                string KuaKuaTag = "";
+                KuaKuaTag = pair.Key + "*" + pair.Value;
+                AddTag(In_StackPanel_BattleTags, KuaKuaTag, Color.FromArgb(255, 0, 255, 0));
+            }
+
+            foreach (var pair in NiuMaTagMap)
+            {
+                string KuaKuaTag = "";
+                KuaKuaTag = pair.Key + "*" + pair.Value;
+                AddTag(In_StackPanel_BattleTags, KuaKuaTag, Color.FromArgb(255, 255, 0, 0));
+            }
+
+            double NiumaNumber = (double)totalNiumaTag / (totalKuaKuaTag + totalNiumaTag) * 100;
+
+            if (NiumaNumber <= 10)
+            {
+                AddTag(In_StackPanel_NiuMaTags, "金牌大腿", Color.FromArgb(255, 0, 255, 0));
+            }
+            else if (NiumaNumber > 10 && NiumaNumber <= 20)
+            {
+                AddTag(In_StackPanel_NiuMaTags, "银牌大腿", Color.FromArgb(255, 0, 255, 0));
+            }
+            else if (NiumaNumber > 20 && NiumaNumber <= 30)
+            {
+                AddTag(In_StackPanel_NiuMaTags, "偶尔能C", Color.FromArgb(255, 0, 255, 0));
+            }
+            else if (NiumaNumber > 30 && NiumaNumber <= 40)
+            {
+                AddTag(In_StackPanel_NiuMaTags, "混子", Color.FromArgb(255, 0, 255, 0));
+            }
+            else if (NiumaNumber > 40)
+            {
+                AddTag(In_StackPanel_NiuMaTags, "峡谷鬼见愁", Color.FromArgb(255, 255, 0, 0));
+            }
+
+            string NiumaZhiShu = "牛马含量: " + NiumaNumber.ToString("F1") + "%";
+            AddTag(In_StackPanel_NiuMaTags, NiumaZhiShu, GetNumberLimitColor(100 / NiumaNumber, 2, 2.5, 5));
+
+            //近期胜率
+            double totalShenglv = (double)totalWin / (totalWin + totalLose) * 100;
+            AddTag(In_StackPanel_NiuMaTags, "近20局胜率: " + totalShenglv.ToString("F1") + "%", GetNumberLimitColor(totalShenglv/100, 0.5, 0.55, 0.6));
+
+
+            //计算KDA
+            AddTag(In_StackPanel_KDATags, "KDA: " + kdaInfo.kda.ToString("F1"), GetNumberLimitColor(kdaInfo.kda, 1.0, 2.0, 3.0));
+            AddTag(In_StackPanel_KDATags, "性价比: " + kdaInfo.realkda.ToString("F1"), GetNumberLimitColor(kdaInfo.realkda, 0.5, 1.0, 2.0));
+            AddTag(In_StackPanel_KDATags, "团队性: " + kdaInfo.teamkda.ToString("F1"), GetNumberLimitColor(kdaInfo.teamkda, 2, 5, 10));
+            AddTag(In_StackPanel_KDATags, kdaInfo.MaName, GetNumberLimitColor(kdaInfo.kda, 2, 3, 4));
+
+
+            AddTag(In_StackPanel_KDATags, "场均击杀: " + kdaInfo.AverageKill.ToString("F1"), GetNumberLimitColor(kdaInfo.AverageKill, 1, 8, 15));
+            AddTag(In_StackPanel_KDATags, "场均助攻: " + kdaInfo.AverageAssistant.ToString("F1"), GetNumberLimitColor(kdaInfo.AverageAssistant, 5, 10, 15));
+            AddTag(In_StackPanel_KDATags, "场均死亡: " + kdaInfo.AverageDeath.ToString("F1"), GetNumberLimitColor(1.0 / kdaInfo.AverageDeath, 0.1, 0.2, 0.3));
+        }
+
+
+        public void SetGameRecord(List<GameObject> gameObjectList,StackPanel In_StackPanel_KDATags,StackPanel In_StackPanel_BattleTags, StackPanel In_StackPanel_NiuMaTags)
+        {
+            BattleInfoCollection.Clear();
+            foreach (GameObject gameobj in gameObjectList)
+            {
                 BattleInfo battleInfo = new BattleInfo(gameobj);
                 BattleInfoCollection.Add(battleInfo);
             }
 
-            double kda = (double)(totalKill + totalAssist) / totalDeath;
-            double realkda = (double)(totalKill) / totalDeath;
-            double teamkda = (double)(totalAssist) / totalDeath;
+            SetStackPanelTags(gameObjectList, In_StackPanel_KDATags, In_StackPanel_BattleTags, In_StackPanel_NiuMaTags);
+        }
 
-            //计算KDA
-            AddTag(StackPanel_KDATags, "KDA: " + kda.ToString("F1") , Color.FromArgb(255, 0, 0, 255)); // 蓝色
-            AddTag(StackPanel_KDATags, "性价比: " + realkda.ToString("F1") , Color.FromArgb(255, 0, 0, 255)); // 蓝色
-            AddTag(StackPanel_KDATags, "团队性: " + teamkda.ToString("F1") , Color.FromArgb(255, 0, 0, 255)); // 蓝色
+        public async Task<List<GameObject>> ReadSummonerRankRecordByPuuid(string Puuid)
+        {
+            List<GameObject> gameObjectsList = new List<GameObject>();
 
+            for (int i = 0; i < 10; i++)
+            {
+                GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0 + i *20, i * 20 + 20);
 
-            //判断是什么马
-            if (kda <= 1.5)
-            {
-                AddTag(StackPanel_KDATags, "坑比", Color.FromArgb(255, 255, 0, 0)); // 红色
+                List<GameObject> tmpList = gameRecord.GamesObjects.GameObjectList;
+                bool shouldExists = false;
+                foreach (GameObject gameobj in tmpList)
+                {
+                    if (gameobj.QueueId == 420)
+                    {
+                        gameObjectsList.Add(gameobj);
+                    }
+
+                    if (gameObjectsList.Count == 20)
+                    {
+                        shouldExists = true;
+                        break;
+                    }
+                }
+
+                if (shouldExists)
+                {
+                    break;
+                }
             }
-            else if (kda > 1.5 && kda <= 2)
+            return gameObjectsList;
+        }
+
+        public async void ReadSummonerGameRecordByPuuid(string Puuid)
+        {
+            bool onlyDanShuang = (bool)CheckBox_OnlyDanShuangPai.IsChecked;
+            if (onlyDanShuang)
             {
-                AddTag(StackPanel_KDATags, "下等马", Color.FromArgb(255, 255, 0, 0)); // 红色
-            }
-            else if (kda > 2 && kda <= 3)
-            {
-                AddTag(StackPanel_KDATags, "中等马", Color.FromArgb(255, 0, 0, 255)); // 蓝色
-            }
-            else if (kda > 3 && kda <= 4)
-            {
-                AddTag(StackPanel_KDATags, "上等马", Color.FromArgb(255, 0, 255, 0)); // 蓝色
+                List<GameObject> gameObjectsList = new List<GameObject>();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0, 20);
+
+                    List<GameObject> tmpList = gameRecord.GamesObjects.GameObjectList;
+                    bool shouldExists = false;
+                    foreach (GameObject gameobj in tmpList)
+                    {
+                        if (gameobj.QueueId == 420)
+                        {
+                            gameObjectsList.Add(gameobj);
+                        }
+
+                        if (gameObjectsList.Count == 20)
+                        {
+                            shouldExists = true;
+                            break;
+                        }
+                    }
+
+                    if (shouldExists)
+                    {
+                        break;
+                    }
+                }
+
+                SetGameRecord(gameObjectsList,StackPanel_KDATags,StackPanel_BattleTags,StackPanel_NiuMaTags);
+
             }
             else
             {
-                AddTag(StackPanel_KDATags, "傲视群雄", Color.FromArgb(255, 0, 255, 0)); // 蓝色
+                GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0, 20);
+                SetGameRecord(gameRecord.GamesObjects.GameObjectList, StackPanel_KDATags, StackPanel_BattleTags, StackPanel_NiuMaTags);
             }
+        }
 
-            Double AverageKill = (double)(totalKill) / gameObjectList.Count;
-            Double AverageAssistant = (double)(totalAssist) / gameObjectList.Count;
-            Double AverageDeath = (double)(totalDeath) / gameObjectList.Count;
 
-            AddTag(StackPanel_KDATags, "场均击杀: " + AverageKill.ToString(), Color.FromArgb(255, 0, 255, 0)); // 蓝色
-            AddTag(StackPanel_KDATags, "场均助攻: " + AverageAssistant.ToString(), Color.FromArgb(255, 0, 255, 0)); // 蓝色
-            AddTag(StackPanel_KDATags, "场均死亡: " + AverageDeath.ToString(), Color.FromArgb(255, 0, 255, 0)); // 蓝色
+        public async void ReadCurrentSummonerGameRecord()
+        {
+            SummonerInfo summonerInfo = await LeagueClientUtils.GetCurrentSummonerInfo();
+            ReadSummonerGameRecordByPuuid(summonerInfo.Puuid);
 
         }
 
 
         private async void myButton_Click(object sender, RoutedEventArgs e)
         {
-            SummonerInfo task = await LeagueClientUtils.GetSummonerInfoByPuuid(TestPuuid);
+            //SummonerInfo task = await LeagueClientUtils.GetSummonerInfoByPuuid(TestPuuid);
+            SummonerInfo task1 = await LeagueClientUtils.GetSummonerInfoByNameTag("ELO连胜队列","54063");
+        }
 
 
-            //GameRecord record = await LeagueClientUtils.GetSummonerGameRecord();
-            //Debug.WriteLine(record.PlatformId);
-            //Debug.WriteLine(record.AccountId);
-            // 替换为你的 LCU API 端口和令牌
+        
 
-            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMIC();
-
-
-            string port = authInfo.Port; // 端口号
-            string token = authInfo.Token; // 令牌
-            string baseUrl = $"https://127.0.0.1:{port}";
-
-            // 忽略 SSL 证书验证
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-
-            // 创建 HttpClient
-            using (HttpClient client = new HttpClient(handler))
+        public async void SearchSummonerInfo()
+        {
+            try
             {
-                // 设置 Basic Auth
-                var authValue = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"riot:{token}")));
-                client.DefaultRequestHeaders.Authorization = authValue;
+                string SummonerName = TextBox_SummonerName.Text;
+                string[] splits = SummonerName.Split("#");
 
-                // 获取当前选人阶段信息
-                string sessionUrl = $"{baseUrl}/lol-champ-select/v1/session";
-                HttpResponseMessage response = await client.GetAsync(sessionUrl);
-
-                if (response.IsSuccessStatusCode)
+                if (splits.Length < 2)
                 {
-                    string jsonResponse = await response.Content.ReadAsStringAsync();
-                    JsonDocument doc = JsonDocument.Parse(jsonResponse);
-                    Debug.WriteLine(jsonResponse);
-                    // 检查是否处于选人阶段
-                    if (doc.RootElement.TryGetProperty("myTeam", out JsonElement myTeam))
-                    {
-                        Debug.WriteLine("当前处于选人阶段");
-                        foreach (JsonElement teammate in myTeam.EnumerateArray())
-                        {
-                            // 获取队友的召唤师名称和 ID
-                            if (teammate.TryGetProperty("summonerName", out JsonElement summonerName) &&
-                                teammate.TryGetProperty("summonerId", out JsonElement summonerId))
-                            {
-                                Debug.WriteLine($"队友: {summonerName.GetString()} (ID: {summonerId.GetInt64()})");
-
-                                // 获取队友详细信息
-                                string summonerUrl = $"{baseUrl}/lol-summoner/v1/summoners/{summonerId.GetInt64()}";
-                                HttpResponseMessage summonerResponse = await client.GetAsync(summonerUrl);
-
-                                if (summonerResponse.IsSuccessStatusCode)
-                                {
-                                    string summonerJson = await summonerResponse.Content.ReadAsStringAsync();
-                                    JsonDocument summonerDoc = JsonDocument.Parse(summonerJson);
-                                    Debug.WriteLine($"详细信息: {summonerDoc.RootElement}");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Debug.WriteLine("当前不处于选人阶段");
-                    }
+                    await MessageHelper.Show("输入的召唤师名称应为 名称#编号， 例如 隔壁老王#11451");
+                    return;
                 }
-                else
-                {
-                    Debug.WriteLine($"请求失败，状态码: {response.StatusCode}");
-                }
+
+                string Name = splits[0];
+                string Tag = splits[1];
+
+                SummonerInfo targetSummonerInfo = await LeagueClientUtils.GetSummonerInfoByNameTag(Name, Tag);
+
+                SetCurrentSummonerInfo(targetSummonerInfo);
+
+                ReadSummonerGameRecordByPuuid(targetSummonerInfo.Puuid);
             }
+            catch (Exception ex)
+            {
+                await MessageHelper.Show("查询失败\n\n" + ex.ToString());
+            }
+        }
+
+
+        private async void Button_SearchSummonerByName_Click(object sender, RoutedEventArgs e)
+        {
+            SearchSummonerInfo();
+
 
         }
 
+        private async void Menu_BattleDetailInfo_Click(object sender, RoutedEventArgs e)
+        {
+            BattleInfo battleInfo = new BattleInfo();
+            try
+            {
+                battleInfo = BattleInfoCollection[BattleInfoListView.SelectedIndex];
+            }catch (Exception ex)
+            {
+
+                _ = MessageHelper.Show("请先左键选中一个对局记录");
+                return;
+            }
+
+            GameObject gameObject = battleInfo.gameObject;
+            GameObject gameRecord = await LeagueClientUtils.GetGameInfoByGameId(gameObject.GameId.ToString());
+
+
+            int Index = 0;
+            foreach (ParticipantIdentity participantIdentity in gameRecord.ParticipantIdentities)
+            {
+                List<GameObject> gameObjectList = await ReadSummonerRankRecordByPuuid(participantIdentity.ParticipantPlayer.Puuid);
+                string SummonerInfoString = "";
+                SummonerInfoString = SummonerInfoString + participantIdentity.ParticipantPlayer.GameName + "#" + participantIdentity.ParticipantPlayer.TagLine;
+
+                ParticipantStats participantStats = gameRecord.Participants[Index].ParticipantStats;
+                SummonerInfoString = SummonerInfoString + "  " + participantStats.Kills.ToString() + "/" + participantStats.Deaths.ToString() + "/" + participantStats.Assists.ToString();
+
+                if (participantIdentity.ParticipantId == 1)
+                {
+                    Summoner1_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner1_KDATags, StackPanel_Summoner1_BattleTags, StackPanel_Summoner1_NiuMaTags);
+                }
+                else if (participantIdentity.ParticipantId == 2)
+                {
+                    Summoner2_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner2_KDATags, StackPanel_Summoner2_BattleTags, StackPanel_Summoner2_NiuMaTags);
+                }
+                else if (participantIdentity.ParticipantId == 3)
+                {
+                    Summoner3_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner3_KDATags, StackPanel_Summoner3_BattleTags, StackPanel_Summoner3_NiuMaTags);
+                }
+                else if (participantIdentity.ParticipantId == 4)
+                {
+                    Summoner4_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner4_KDATags, StackPanel_Summoner4_BattleTags, StackPanel_Summoner4_NiuMaTags);
+                }
+                else if (participantIdentity.ParticipantId == 5)
+                {
+                    Summoner5_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner5_KDATags, StackPanel_Summoner5_BattleTags, StackPanel_Summoner5_NiuMaTags);
+                }
+
+                else if (participantIdentity.ParticipantId == 6)
+                {
+                    Summoner6_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner6_KDATags, StackPanel_Summoner6_BattleTags, StackPanel_Summoner6_NiuMaTags);
+                }
+
+                else if (participantIdentity.ParticipantId == 7)
+                {
+                    Summoner7_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner7_KDATags, StackPanel_Summoner7_BattleTags, StackPanel_Summoner7_NiuMaTags);
+                }
+
+                else if (participantIdentity.ParticipantId == 8)
+                {
+                    Summoner8_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner8_KDATags, StackPanel_Summoner8_BattleTags, StackPanel_Summoner8_NiuMaTags);
+                }
+                else if (participantIdentity.ParticipantId == 9)
+                {
+                    Summoner9_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner9_KDATags, StackPanel_Summoner9_BattleTags, StackPanel_Summoner9_NiuMaTags);
+                }
+                else if (participantIdentity.ParticipantId == 10)
+                {
+                    Summoner10_Info.Text = SummonerInfoString;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner10_KDATags, StackPanel_Summoner10_BattleTags, StackPanel_Summoner10_NiuMaTags);
+                }
+                Index++;
+            }
+            
+
+            //ContentFrame.Navigate(typeof(TargetPage), parameter);
+        }
+
+        private void Button_Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            Referesh();
+        }
+
+        private void CheckBox_OnlyDanShuangPai_Checked(object sender, RoutedEventArgs e)
+        {
+            Referesh();
+        }
+
+        private void CheckBox_OnlyDanShuangPai_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Referesh();
+        }
+
+        
+
+        private async void Button_CurrentGameInfo_Click(object sender, RoutedEventArgs e)
+        {
+            ChampionSelect championSelect = await LeagueClientUtils.GetChampionSelectInfo();
+            if (championSelect.teamMemberList == null)
+            {
+                _ = MessageHelper.Show("对局尚未开始");
+                return;
+            }
+
+            int index = 1;
+            foreach (TeamMemberInfo teamMemberInfo in championSelect.teamMemberList)
+            {
+                string puuid = teamMemberInfo.Puuid;
+                List<GameObject> gameObjectList = await ReadSummonerRankRecordByPuuid(puuid);
+                SummonerInfo summonerInfo = await LeagueClientUtils.GetSummonerInfoByPuuid(puuid);
+                string SummonerName = summonerInfo.GameName +"#" + summonerInfo.TagLine;
+
+                if (index == 1)
+                {
+                    Summoner1_Info.Text = SummonerName;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner1_KDATags, StackPanel_Summoner1_BattleTags, StackPanel_Summoner1_NiuMaTags);
+                }
+                else if (index == 2)
+                {
+                    Summoner2_Info.Text = SummonerName;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner2_KDATags, StackPanel_Summoner2_BattleTags, StackPanel_Summoner2_NiuMaTags);
+                }
+                else if (index == 3)
+                {
+                    Summoner3_Info.Text = SummonerName;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner3_KDATags, StackPanel_Summoner3_BattleTags, StackPanel_Summoner3_NiuMaTags);
+                }
+                else if (index == 4)
+                {
+                    Summoner4_Info.Text = SummonerName;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner4_KDATags, StackPanel_Summoner4_BattleTags, StackPanel_Summoner4_NiuMaTags);
+                }
+                else if (index == 5)
+                {
+                    Summoner5_Info.Text = SummonerName;
+                    SetStackPanelTags(gameObjectList, StackPanel_Summoner5_KDATags, StackPanel_Summoner5_BattleTags, StackPanel_Summoner5_NiuMaTags);
+                }
+
+                index++;
+            }
+            
+        }
     }
 }

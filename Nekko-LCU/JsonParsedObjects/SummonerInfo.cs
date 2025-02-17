@@ -104,4 +104,34 @@ namespace Nekko_LCU
             //RerollPoints = summonerInfo.RerollPoints;
         }
     }
+
+    public class SummonerSimpleInfo
+    {
+        [JsonProperty("puuid")]
+
+        public string Puuid { get; set; } = "";
+
+        [JsonProperty("summonerLevel")]
+
+        public int SummonerLevel { get; set; } = 0;
+
+        [JsonProperty("name")]
+
+        public string Name { get; set; } = "";
+
+        [JsonProperty("tagLine")]
+        public string TagLine { get; set; } = "";
+
+        public SummonerSimpleInfo()
+        {
+
+        }
+
+        public SummonerSimpleInfo(string jsonString)
+        {
+            JsonConvert.PopulateObject(jsonString, this);
+        }
+    }
+
+
 }
