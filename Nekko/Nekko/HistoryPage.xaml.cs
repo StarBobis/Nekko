@@ -56,7 +56,7 @@ namespace Nekko
             //AddTag(StackPanel_BasicTags, "辅助精通", Color.FromArgb(255, 0, 0, 255)); // 蓝色
         }
 
-        public void Referesh()
+        public async void Referesh()
         {
             LeagueClientUtils.GetClientInfoByWMI(true);
 
@@ -67,7 +67,7 @@ namespace Nekko
             }
             else
             {
-                SearchSummonerInfo();
+                await SearchSummonerInfo();
             }
            
         }
@@ -267,9 +267,11 @@ namespace Nekko
         {
             List<GameObject> gameObjectsList = new List<GameObject>();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
-                GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0 + i *20, i * 20 + 20);
+                TimerUtils.Start("GetSummonerGameRecordByPuuid");
+                GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0 + i * 20, i * 20 + 20);
+                TimerUtils.End("GetSummonerGameRecordByPuuid");
 
                 List<GameObject> tmpList = gameRecord.GamesObjects.GameObjectList;
                 bool shouldExists = false;
@@ -356,7 +358,7 @@ namespace Nekko
 
         
 
-        public async void SearchSummonerInfo()
+        public async Task SearchSummonerInfo()
         {
             try
             {
@@ -387,7 +389,7 @@ namespace Nekko
 
         private async void Button_SearchSummonerByName_Click(object sender, RoutedEventArgs e)
         {
-            SearchSummonerInfo();
+            await SearchSummonerInfo();
 
 
         }
@@ -395,29 +397,37 @@ namespace Nekko
         private async void Menu_BattleDetailInfo_Click(object sender, RoutedEventArgs e)
         {
             BattleInfo battleInfo = new BattleInfo();
+
             try
             {
                 battleInfo = BattleInfoCollection[BattleInfoListView.SelectedIndex];
+
             }catch (Exception ex)
             {
-
+                ex.ToString();
                 _ = MessageHelper.Show("请先左键选中一个对局记录");
                 return;
             }
 
             GameObject gameObject = battleInfo.gameObject;
-            GameObject gameRecord = await LeagueClientUtils.GetGameInfoByGameId(gameObject.GameId.ToString());
 
+            TimerUtils.Start("GetGameInfoByGameId");
+            GameObject gameRecord = await LeagueClientUtils.GetGameInfoByGameId(gameObject.GameId.ToString());
+            TimerUtils.End("GetGameInfoByGameId");
 
             int Index = 0;
+
             foreach (ParticipantIdentity participantIdentity in gameRecord.ParticipantIdentities)
             {
+                TimerUtils.Start("ReadSummonerRankRecordByPuuid");
+
                 List<GameObject> gameObjectList = await ReadSummonerRankRecordByPuuid(participantIdentity.ParticipantPlayer.Puuid);
                 string SummonerInfoString = "";
                 SummonerInfoString = SummonerInfoString + participantIdentity.ParticipantPlayer.GameName + "#" + participantIdentity.ParticipantPlayer.TagLine;
 
                 ParticipantStats participantStats = gameRecord.Participants[Index].ParticipantStats;
                 SummonerInfoString = SummonerInfoString + "  " + participantStats.Kills.ToString() + "/" + participantStats.Deaths.ToString() + "/" + participantStats.Assists.ToString();
+                TimerUtils.End("ReadSummonerRankRecordByPuuid");
 
                 if (participantIdentity.ParticipantId == 1)
                 {

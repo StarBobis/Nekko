@@ -37,7 +37,7 @@ namespace Nekko
             this.InitializeComponent();
 
             //设置标题
-            this.Title = "Nekko V1.0.0.1";
+            this.Title = "Nekko V1.0.0.2";
 
             //设置窗口大小
             this.AppWindow.Resize(new SizeInt32(1400, 888));

@@ -20,8 +20,7 @@ namespace Nekko_LCU
     {
 
         public static LeagueClientAuthInfo leagueClientAuthInfo {get; set;} = new LeagueClientAuthInfo();
-
-
+        public static HttpClient LeagueHttpClient { get; set; } = null;
 
         public static LeagueClientAuthInfo GetClientInfoByWMI(bool forceRefresh = false)
         {
@@ -65,43 +64,48 @@ namespace Nekko_LCU
         /// 获取当前英雄联盟客户端的Port,Token,Server
         /// </summary>
         /// <returns></returns>
-        //public static LeagueClientAuthInfo GetClientInfoByWMIC(bool forceRefresh = false)
-        //{
-        //    if (!forceRefresh)
-        //    {
-        //        if (leagueClientAuthInfo.Port != null && leagueClientAuthInfo.Port != "")
-        //        {
-        //            Debug.WriteLine("读取缓存的LeagueClientAutoInfo");
-        //            return leagueClientAuthInfo;
-        //        }
-        //    }
-            
-
-        //    Debug.WriteLine("读取新的LeagueClientAutoInfo");
-
-        //    string command = "wmic process WHERE name='LeagueClientUx.exe' GET commandline";
-        //    string output = CommandUtils.ExecuteCmdCommand(command);
-
-
-        //    // 使用正则表达式提取所需信息
-        //    string port = Regex.Match(output, @"--app-port=([^""]+)").Groups[1].Value;
-        //    string token = Regex.Match(output, @"--remoting-auth-token=([^""]+)").Groups[1].Value;
-        //    string server = Regex.Match(output, @"--rso_platform_id=([^""]+)").Groups[1].Value;
-
-        //    //Debug.WriteLine($"Port: {port}"); //Port: 59746 
-        //    //Debug.WriteLine($"Token: {token}"); //Token: oW58i5VQ_LH_yoNTJrb - eA
-        //    //Debug.WriteLine($"Server: {server}"); //Server: TJ101
-        //    LeagueClientAuthInfo authInfo = new LeagueClientAuthInfo();
-        //    authInfo.Port = port;
-        //    authInfo.Token = token;
-        //    authInfo.Server = server;
-
-        //    leagueClientAuthInfo = authInfo;
-        //    return authInfo;
-        //}
-
-        public static HttpClientHandler NoErrorHandler()
+        [Obsolete("此方法已过时，因为部分电脑无法使用WMIC，且微软已停止支持WMIC，而是支持WMI，但是留作参考")]
+        public static LeagueClientAuthInfo GetClientInfoByWMIC(bool forceRefresh = false)
         {
+            if (!forceRefresh)
+            {
+                if (leagueClientAuthInfo.Port != null && leagueClientAuthInfo.Port != "")
+                {
+                    Debug.WriteLine("读取缓存的LeagueClientAutoInfo");
+                    return leagueClientAuthInfo;
+                }
+            }
+
+
+            Debug.WriteLine("读取新的LeagueClientAutoInfo");
+
+            string command = "wmic process WHERE name='LeagueClientUx.exe' GET commandline";
+            string output = CommandUtils.ExecuteCmdCommand(command);
+
+
+            // 使用正则表达式提取所需信息
+            string port = Regex.Match(output, @"--app-port=([^""]+)").Groups[1].Value;
+            string token = Regex.Match(output, @"--remoting-auth-token=([^""]+)").Groups[1].Value;
+            string server = Regex.Match(output, @"--rso_platform_id=([^""]+)").Groups[1].Value;
+
+            //Debug.WriteLine($"Port: {port}"); //Port: 59746 
+            //Debug.WriteLine($"Token: {token}"); //Token: oW58i5VQ_LH_yoNTJrb - eA
+            //Debug.WriteLine($"Server: {server}"); //Server: TJ101
+            LeagueClientAuthInfo authInfo = new LeagueClientAuthInfo();
+            authInfo.Port = port;
+            authInfo.Token = token;
+            authInfo.Server = server;
+
+            leagueClientAuthInfo = authInfo;
+            return authInfo;
+        }
+
+        public static HttpClient GetNewRiotAuthClient(bool forceRefresh = false)
+        {
+            //获取英雄联盟校验信息
+            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI(forceRefresh);
+
+            //忽略所有证书错误
             HttpClientHandler errorHandler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
@@ -111,17 +115,32 @@ namespace Nekko_LCU
                 }
             };
 
-            return errorHandler;
-        }
-
-        public static HttpClient GetRiotAuthClient()
-        {
-            HttpClient client = new HttpClient(NoErrorHandler());
-            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI();
+            //创建新的HttpClient
+            HttpClient client = new HttpClient(errorHandler);
             client.BaseAddress = new Uri($"https://127.0.0.1:{authInfo.Port}/");
             var authTokenBytes = Encoding.ASCII.GetBytes($"riot:{authInfo.Token}");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authTokenBytes));
+
+
             return client;
+        }
+
+
+        public static HttpClient GetRiotAuthClient(bool forceRefresh = false)
+        {
+            if (!forceRefresh)
+            {
+                if (LeagueHttpClient == null)
+                {
+                    LeagueHttpClient = GetNewRiotAuthClient();
+                }
+            }
+            else
+            {
+                LeagueHttpClient = GetNewRiotAuthClient();
+            }
+
+            return LeagueHttpClient;
         }
 
         
@@ -160,14 +179,10 @@ namespace Nekko_LCU
         /// <returns></returns>
         public static async Task<SummonerInfo> GetCurrentSummonerInfo()
         {
-            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI();
             HttpClient client = GetRiotAuthClient();
-
-            string url = $"https://127.0.0.1:{authInfo.Port}/lol-summoner/v1/current-summoner";
-            HttpResponseMessage response = await client.GetAsync(url);
-
+            HttpResponseMessage response = await client.GetAsync($"/lol-summoner/v1/current-summoner");
             string responseBody = await response.Content.ReadAsStringAsync();
-            //Debug.WriteLine(responseBody);
+
             SummonerInfo summonerInfo = new SummonerInfo(responseBody);
             return summonerInfo;
         }
@@ -180,14 +195,10 @@ namespace Nekko_LCU
         /// <returns></returns>
         public static async Task<SummonerInfo> GetSummonerInfoByNameTag(string Name, string Tag)
         {
-            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI();
             HttpClient client = GetRiotAuthClient();
-            
-            string nameTag = $"{Name}%23{Tag}"; // #需编码为%23
-            string url = $"https://127.0.0.1:{authInfo.Port}/lol-summoner/v1/summoners?name={nameTag}";
-            HttpResponseMessage response = await client.GetAsync(url);
+            HttpResponseMessage response = await client.GetAsync($"/lol-summoner/v1/summoners?name={Name}%23{Tag}");
             string responseBody = await response.Content.ReadAsStringAsync();
-            //Debug.WriteLine(responseBody);
+
             SummonerInfo summonerInfo = new SummonerInfo(responseBody);
             return summonerInfo;
         }
@@ -199,13 +210,10 @@ namespace Nekko_LCU
         /// <returns></returns>
         public static async Task<SummonerInfo> GetSummonerInfoByPuuid(string Puuid)
         {
-            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI();
             HttpClient client = GetRiotAuthClient();
-
-            string url = $"https://127.0.0.1:{authInfo.Port}/lol-summoner/v2/summoners/puuid/{Puuid}";
-            HttpResponseMessage response = await client.GetAsync(url);
+            HttpResponseMessage response = await client.GetAsync($"/lol-summoner/v2/summoners/puuid/{Puuid}");
             string responseBody = await response.Content.ReadAsStringAsync();
-            Debug.WriteLine(responseBody);
+
             SummonerInfo summonerInfo = new SummonerInfo(responseBody);
             return summonerInfo;
         }
@@ -222,20 +230,12 @@ namespace Nekko_LCU
 
             // 使用PUUID查询历史战绩
             HttpResponseMessage historyResponse = await client.GetAsync($"/lol-match-history/v1/products/lol/{Puuid}/matches?begIndex={beginIndex}&endIndex={endIndex}" );
-            if (historyResponse.IsSuccessStatusCode)
-            {
-                var historyJson = await historyResponse.Content.ReadAsStringAsync();
-                GameRecord gameRecord = new GameRecord(historyJson);
-                Debug.WriteLine(historyJson); // 输出历史战绩JSON字符串
+            var historyJson = await historyResponse.Content.ReadAsStringAsync();
+            TimerUtils.Start("CreateGameRecord");
+            GameRecord gameRecord = new GameRecord(historyJson);
+            TimerUtils.End("CreateGameRecord");
 
-                return gameRecord;
-            }
-            else
-            {
-                GameRecord gameRecord = new GameRecord();
-                Debug.WriteLine("Failed to get match history.");
-                return gameRecord;
-            }
+            return gameRecord;
         }
 
         public static async Task<GameObject> GetGameInfoByGameId(string gameId)
@@ -262,26 +262,19 @@ namespace Nekko_LCU
 
         }
 
-
+        /// <summary>
+        /// 获取当前选人阶段信息，也只有在英雄选择阶段这个API有用，进游戏之后也查不到了
+        /// </summary>
+        /// <returns></returns>
         public static async Task<ChampionSelect> GetChampionSelectInfo()
         {
             HttpClient client = GetRiotAuthClient();
 
-            // 获取当前选人阶段信息
             HttpResponseMessage response = await client.GetAsync($"/lol-champ-select/v1/session");
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-                ChampionSelect championSelect = new ChampionSelect(jsonResponse);
-                Debug.WriteLine(jsonResponse);
-                return championSelect;
-            }
-            else
-            {
-                Debug.WriteLine($"请求失败，状态码: {response.StatusCode}");
-                ChampionSelect championSelect = new ChampionSelect();
-                return championSelect;
-            }
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            ChampionSelect championSelect = new ChampionSelect(jsonResponse);
+            return championSelect;
         }
 
 
