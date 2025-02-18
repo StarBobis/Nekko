@@ -265,9 +265,10 @@ namespace Nekko
 
         public async Task<List<GameObject>> ReadSummonerRankRecordByPuuid(string Puuid)
         {
+
             List<GameObject> gameObjectsList = new List<GameObject>();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 TimerUtils.Start("GetSummonerGameRecordByPuuid");
                 GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0 + i * 20, i * 20 + 20);

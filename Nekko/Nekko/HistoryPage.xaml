@@ -19,14 +19,7 @@
         <Style TargetType="ListViewItem" x:Key="ListViewItemStyleWithMenu">
             <Setter Property="ContextFlyout" Value="{StaticResource ItemMenuFlyout}"/>
         </Style>
-
-        <!--<Style TargetType="TextBlock" x:Key="DefaultTextBlockStyle">
-            --><!--<Setter Property="FontSize" Value="14"/>
-            
-            <Setter Property="Foreground" Value="Blue"/>--><!--
-            <Setter Property="IsTextSelectionEnabled" Value="True"></Setter>
-            --><!-- 添加更多你想要统一设置的属性 --><!--
-        </Style>-->
+ 
     </Page.Resources>
     
     <!-- 支持滑条，不然显示不完全 -->
