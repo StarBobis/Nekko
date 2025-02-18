@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="Transparent">
 
-    <Grid>
+    <Grid >
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
             <TextBlock Text="Nekko" FontSize="24" FontWeight="Bold" Foreground="White"/>
             <TextBlock x:Name="TextBlock_Description" Text="英雄联盟智能战绩分析工具" FontSize="12" Margin="0,5,0,15" Foreground="White" />

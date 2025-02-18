@@ -35,6 +35,7 @@ namespace Nekko
         public MainWindow()
         {
             this.InitializeComponent();
+            this.ExtendsContentIntoTitleBar = true;
 
             //…Ë÷√±ÍÃ‚
             this.Title = "Nekko V1.0.0.2";

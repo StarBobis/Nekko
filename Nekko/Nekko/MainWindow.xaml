@@ -25,7 +25,9 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="NavigationViewItem_HomePage" Icon="Home" Content="主页" Tag="HomePage" />
                 <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯" Tag="HistoryPage" />
-                <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="对局" Tag="BattlePage" />
+                <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="实时队友查询" Tag="BattlePage" />
+                <!--<NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="实时敌方查询" Tag="BattlePage" />
+                <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="对局实力对比" Tag="BattlePage" />-->
             </NavigationView.MenuItems>
 
             <Frame x:Name="contentFrame"/>

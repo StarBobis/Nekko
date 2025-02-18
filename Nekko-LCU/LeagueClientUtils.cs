@@ -22,14 +22,8 @@ namespace Nekko_LCU
         public static LeagueClientAuthInfo leagueClientAuthInfo {get; set;} = new LeagueClientAuthInfo();
         public static HttpClient LeagueHttpClient { get; set; } = null;
 
-        public static LeagueClientAuthInfo GetClientInfoByWMI(bool forceRefresh = false)
+        public static LeagueClientAuthInfo GetClientInfoByWMI()
         {
-            if (!forceRefresh && leagueClientAuthInfo != null && !string.IsNullOrEmpty(leagueClientAuthInfo.Port))
-            {
-                Debug.WriteLine("读取缓存的LeagueClientAutoInfo");
-                return leagueClientAuthInfo;
-            }
-
             Debug.WriteLine("读取新的LeagueClientAutoInfo");
 
             LeagueClientAuthInfo authInfo = new LeagueClientAuthInfo();
@@ -103,7 +97,7 @@ namespace Nekko_LCU
         public static HttpClient GetNewRiotAuthClient(bool forceRefresh = false)
         {
             //获取英雄联盟校验信息
-            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI(forceRefresh);
+            LeagueClientAuthInfo authInfo = LeagueClientUtils.GetClientInfoByWMI();
 
             //忽略所有证书错误
             HttpClientHandler errorHandler = new HttpClientHandler
@@ -172,6 +166,25 @@ namespace Nekko_LCU
         }
 
 
+        public static async Task<string> GetResponseBodyJsonStrinngByUri(string Uri)
+        {
+            try
+            {
+                HttpClient client = GetRiotAuthClient();
+                //HttpResponseMessage response = await client.GetAsync($"/lol-summoner/v1/current-summoner");
+                HttpResponseMessage response = await client.GetAsync(Uri);
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                return responseBody;
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                return "{}";
+            }
+        }
+
+
         /// <summary>
         /// 获取当前客户端的召唤师信息
         /// SummonerInfo summonerInfo = await LeagueClientUtils.GetCurrentSummonerInfo();
@@ -179,10 +192,7 @@ namespace Nekko_LCU
         /// <returns></returns>
         public static async Task<SummonerInfo> GetCurrentSummonerInfo()
         {
-            HttpClient client = GetRiotAuthClient();
-            HttpResponseMessage response = await client.GetAsync($"/lol-summoner/v1/current-summoner");
-            string responseBody = await response.Content.ReadAsStringAsync();
-
+            string responseBody = await GetResponseBodyJsonStrinngByUri($"/lol-summoner/v1/current-summoner");
             SummonerInfo summonerInfo = new SummonerInfo(responseBody);
             return summonerInfo;
         }
@@ -226,15 +236,10 @@ namespace Nekko_LCU
         /// <returns></returns>
         public static async Task<GameRecord> GetSummonerGameRecordByPuuid(string Puuid,int beginIndex, int endIndex)
         {
-            HttpClient client = GetRiotAuthClient();
+            string Uri = $"/lol-match-history/v1/products/lol/{Puuid}/matches?begIndex={beginIndex}&endIndex={endIndex}";
+            string historyJson = await GetResponseBodyJsonStrinngByUri(Uri);
 
-            // 使用PUUID查询历史战绩
-            HttpResponseMessage historyResponse = await client.GetAsync($"/lol-match-history/v1/products/lol/{Puuid}/matches?begIndex={beginIndex}&endIndex={endIndex}" );
-            var historyJson = await historyResponse.Content.ReadAsStringAsync();
-            TimerUtils.Start("CreateGameRecord");
             GameRecord gameRecord = new GameRecord(historyJson);
-            TimerUtils.End("CreateGameRecord");
-
             return gameRecord;
         }
 
@@ -277,6 +282,39 @@ namespace Nekko_LCU
             return championSelect;
         }
 
+        public static async Task<List<GameObject>> ReadSummonerRankRecordByPuuid(string Puuid)
+        {
 
+            List<GameObject> gameObjectsList = new List<GameObject>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                TimerUtils.Start("GetSummonerGameRecordByPuuid");
+                GameRecord gameRecord = await LeagueClientUtils.GetSummonerGameRecordByPuuid(Puuid, 0 + i * 20, i * 20 + 20);
+                TimerUtils.End("GetSummonerGameRecordByPuuid");
+
+                List<GameObject> tmpList = gameRecord.GamesObjects.GameObjectList;
+                bool shouldExists = false;
+                foreach (GameObject gameobj in tmpList)
+                {
+                    if (gameobj.QueueId == 420)
+                    {
+                        gameObjectsList.Add(gameobj);
+                    }
+
+                    if (gameObjectsList.Count == 20)
+                    {
+                        shouldExists = true;
+                        break;
+                    }
+                }
+
+                if (shouldExists)
+                {
+                    break;
+                }
+            }
+            return gameObjectsList;
+        }
     }
 }
