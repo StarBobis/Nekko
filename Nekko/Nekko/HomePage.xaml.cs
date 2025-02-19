@@ -26,6 +26,11 @@ using System.Text;
 using System.Diagnostics;
 using System.Text.Json;
 using Windows.System;
+using Microsoft.UI.Xaml.Hosting;
+using Microsoft.UI.Xaml.Media.Animation;
+using Windows.UI;
+using Microsoft.UI;
+using Windows.UI.Composition;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -36,26 +41,22 @@ namespace Nekko
     /// </summary>
     public sealed partial class HomePage : Page
     {
+
         public HomePage()
         {
             this.InitializeComponent();
-
-
-            
         }
 
         private void OpenLinkButtonClick(object sender, RoutedEventArgs e)
         {
-            
             var button = sender as Button;
             if (button != null && Uri.IsWellFormedUriString(button.Tag.ToString(), UriKind.Absolute))
             {
                 IAsyncOperation<bool> asyncOperation = Launcher.LaunchUriAsync(new Uri(button.Tag.ToString()));
             }
-
-
         }
 
+      
 
     }
 }

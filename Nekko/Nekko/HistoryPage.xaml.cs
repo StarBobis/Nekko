@@ -48,12 +48,10 @@ namespace Nekko
         {
             this.InitializeComponent();
 
-            Referesh();
-
             BattleInfoListView.ItemsSource = BattleInfoCollection;
 
-            //AddTag(StackPanel_BasicTags,"疲劳驾驶", Color.FromArgb(255, 255, 0, 0)); // 红色
-            //AddTag(StackPanel_BasicTags, "辅助精通", Color.FromArgb(255, 0, 0, 255)); // 蓝色
+            Referesh();
+
         }
 
         public async void Referesh()

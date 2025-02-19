@@ -24,6 +24,12 @@
                 <GradientStop Color="Purple" Offset="1.0"/>
             </LinearGradientBrush>
 
+            <!--<LinearGradientBrush x:Key="PurpleBorderBrush" StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Color="Purple" Offset="0.0" />
+                <GradientStop Color="Green" Offset="0.5" />
+                <GradientStop Color="Blue" Offset="1.0" />
+            </LinearGradientBrush>-->
+
         </ResourceDictionary>
 
     </Application.Resources>

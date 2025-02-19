@@ -22,6 +22,7 @@
  
     </Page.Resources>
     
+    
     <!-- 支持滑条，不然显示不完全 -->
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
@@ -45,11 +46,13 @@
 
             <!-- 标题栏 -->
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0,0,0,10">
-                <TextBlock x:Name="TextBlock_SummonerInfo" Text="请开启游戏后刷新此页面" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,24,0,10" />
+                <TextBlock x:Name="TextBlock_SummonerInfo" Text="请开启游戏后刷新此页面" FontSize="25" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,24,0,10" IsTextSelectionEnabled="True">
+                   
+                </TextBlock>
                 <Button x:Name="Button_Refresh" Content="刷新" Margin="0,28,0,10" Click="Button_Refresh_Click"></Button>
             </StackPanel>
 
-
+            
             <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0,0,0,10">
                 <TextBlock x:Name="TextBlock_SummonerLevel" Text="召唤师等级: 0"  HorizontalAlignment="Center" Margin="0,0,5,0" FontSize="15" FontWeight="SemiBold"/>
             </StackPanel>

@@ -10,19 +10,41 @@
     Background="Transparent">
 
     <Grid >
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
-            <TextBlock Text="Nekko" FontSize="24" FontWeight="Bold" Foreground="White"/>
-            <TextBlock x:Name="TextBlock_Description" Text="英雄联盟智能战绩分析工具" FontSize="12" Margin="0,5,0,15" Foreground="White" />
+        
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40">
+            <TextBlock Text="Nekko" FontSize="44" FontWeight="Bold" >
+                <TextBlock.Foreground>
+                    <LinearGradientBrush  StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Purple" Offset="0.0" />
+                        <GradientStop Color="Green" Offset="0.5" />
+                        <GradientStop Color="Blue" Offset="1.0" />
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+
+            <TextBlock x:Name="TextBlock_Description" Text="英雄联盟智能战绩分析工具" FontWeight="Bold"  FontSize="20" Margin="0,5,0,15" >
+                <TextBlock.Foreground>
+                    <LinearGradientBrush  StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Purple" Offset="0.0" />
+                        <GradientStop Color="Green" Offset="0.5" />
+                        <GradientStop Color="Blue" Offset="1.0" />
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                 <Button Click="OpenLinkButtonClick"  Tag="https://www.yuque.com/airde/pri05n?">
                     <StackPanel Orientation="Horizontal">
-                        <SymbolIcon Symbol="Document" Margin="0,0,5,0"/>
-                        <TextBlock x:Name="TextBlock_Documents" Text="Nekko开发文档" VerticalAlignment="Center"/>
+
+
+                        <TextBlock x:Name="TextBlock_Documents" Text="Nekko开发文档" VerticalAlignment="Center">
+                           
+                        </TextBlock>
                     </StackPanel>
                 </Button>
                 <Button Click="OpenLinkButtonClick" Tag="https://github.com/StarBobis/Nekko-Release">
                     <StackPanel Orientation="Horizontal">
-                        <SymbolIcon Symbol="View" Margin="0,0,5,0"/>
+                        <SymbolIcon Symbol="Download" Margin="0,0,5,0"/>
                         <TextBlock x:Name="TextBlock_Github" Text="Github下载地址" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>

@@ -47,6 +47,16 @@ namespace Nekko
                 SummonerInfo summonerInfo = await LeagueClientUtils.GetSummonerInfoByPuuid(puuid);
                 string SummonerName = summonerInfo.GameName + "#" + summonerInfo.TagLine;
 
+                TagInfo tagInfo = new TagInfo(gameObjectList);
+                TextBox_Desc.Text = TextBox_Desc.Text +  summonerInfo.GameName + "  ";
+
+                foreach (Tag tag in tagInfo.DescTagList)
+                {
+                    TextBox_Desc.Text = TextBox_Desc.Text + " " + tag.TagName;
+                }
+                
+                TextBox_Desc.Text = TextBox_Desc.Text + "\n\n";
+
                 if (index == 1)
                 {
                     Summoner1_Info.Text = SummonerName;
@@ -76,6 +86,11 @@ namespace Nekko
                 index++;
             }
 
+        }
+
+        private void Button_Clear_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox_Desc.Text = "";
         }
     }
 }
