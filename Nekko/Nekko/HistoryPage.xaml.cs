@@ -200,12 +200,13 @@ namespace Nekko
         private async void Button_SearchSummonerByName_Click(object sender, RoutedEventArgs e)
         {
             await SearchSummonerInfo();
-
-
+            
         }
 
         private async void Menu_BattleDetailInfo_Click(object sender, RoutedEventArgs e)
         {
+
+
             BattleInfo battleInfo = new BattleInfo();
 
             try

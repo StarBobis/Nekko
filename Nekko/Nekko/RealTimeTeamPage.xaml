@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="Nekko.BattlePage"
+    x:Class="Nekko.RealTimeTeamPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Nekko"
@@ -34,7 +34,7 @@
                         <GradientStop Color="Green" Offset="1.0"/>
                     </LinearGradientBrush>
                 </TextBlock.Foreground>
-            当前对局牛马数据分析
+            当前队友数据分析
             </TextBlock>
             
             <!--前5位召唤师-->
@@ -115,7 +115,7 @@ BorderBrush="{StaticResource RainbowBorderBrush}" BorderThickness="1" CornerRadi
                             <GradientStop Color="Green" Offset="1.0"/>
                         </LinearGradientBrush>
                     </TextBlock.Foreground>
-     一句话描述牛马战绩
+     一句话描述队友战绩
                 </TextBlock>
 
                 <Button Content="清空" x:Name="Button_Clear" Click="Button_Clear_Click" Margin="20,10,0,0"></Button>

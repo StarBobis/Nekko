@@ -44,7 +44,8 @@ namespace Nekko
             this.Title = "Nekko V1.0.0.3";
 
             //设置窗口大小
-            this.AppWindow.Resize(new SizeInt32(1400, 888));
+            //1111 814   
+            this.AppWindow.Resize(new SizeInt32(1132 + 16, 826 + 9));
             
             //设置图标
             this.AppWindow.SetIcon("Assets/Nekko.ico");
@@ -78,8 +79,8 @@ namespace Nekko
                     case "HistoryPage":
                         pageType = typeof(HistoryPage);
                         break;
-                    case "BattlePage":
-                        pageType = typeof(BattlePage);
+                    case "RealTimeTeamPage":
+                        pageType = typeof(RealTimeTeamPage);
                         break;
                 }
 

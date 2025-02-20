@@ -17,7 +17,7 @@
         <Grid.Background>
             <ImageBrush x:Name="HomeBGImageBrush" Stretch="UniformToFill" ImageSource="Assets/NekkoBackGround.png" />
         </Grid.Background>
-        <NavigationView OpenPaneLength="200"  x:Name="nvSample" ItemInvoked="nvSample_ItemInvoked" IsBackEnabled="False" IsBackButtonVisible="Collapsed" >
+        <NavigationView  OpenPaneLength="200" PaneDisplayMode="LeftCompact" x:Name="nvSample" ItemInvoked="nvSample_ItemInvoked" IsBackEnabled="False" IsBackButtonVisible="Collapsed" >
             
             <NavigationView.Background>
                 <SolidColorBrush Color="Transparent"/>
@@ -26,7 +26,7 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="NavigationViewItem_HomePage" Icon="Home" Content="主页" Tag="HomePage" />
                 <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯" Tag="HistoryPage" />
-                <NavigationViewItem x:Name="NavigationViewItem_BattlePage" Icon="Edit" Content="实时队友查询" Tag="BattlePage" />
+                <NavigationViewItem x:Name="NavigationViewItem_RealTimeTeamPage" Icon="Edit" Content="英雄选择阶段队友查询" Tag="RealTimeTeamPage" />
             </NavigationView.MenuItems>
 
             <Frame x:Name="contentFrame"/>
