@@ -70,10 +70,10 @@
             </StackPanel>
             
             <!-- 战绩信息显示区域 -->
-            <Border Grid.Column="0" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,15,20,20"
+            <Border Grid.Column="0" Grid.Row="6" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="20,15,20,20"
     BorderBrush="{StaticResource RainbowBorderBrush}" BorderThickness="1" CornerRadius="5" >
                 <!-- XAML -->
-                <ListView  x:Name="BattleInfoListView" Width="1100" Height="500"  Background="#B3000000" ItemContainerStyle="{StaticResource ListViewItemStyleWithMenu}">
+                <ListView  x:Name="BattleInfoListView" HorizontalAlignment="Stretch" Height="500"  Background="#B3000000" ItemContainerStyle="{StaticResource ListViewItemStyleWithMenu}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
