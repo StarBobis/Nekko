@@ -7,10 +7,152 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent" NavigationCacheMode="Enabled">
 
-    <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <!-- 单列布局 -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--前5位召唤师-->
+            <Border Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,45,20,20"
+BorderBrush="{StaticResource RainbowBorderBrush}" BorderThickness="1" CornerRadius="5" Width="1000">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner1_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner1_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner1_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner1_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner2_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner2_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner2_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner2_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="2"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner3_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner3_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner3_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner3_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="3"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner4_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner4_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner4_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner4_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="4"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner5_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner5_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner5_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner5_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+            <!--后5位召唤师-->
+            <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20,15,20,20"
+BorderBrush="{StaticResource RainbowBorderBrush}" BorderThickness="1" CornerRadius="5" Width="1000" >
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner6_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner6_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner6_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner6_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner7_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner7_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner7_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner7_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="2"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner8_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner8_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner8_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner8_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="3"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner9_Info" FontSize="25" FontWeight="SemiBold"  IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner9_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner9_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner9_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="0" Grid.Row="4"  Orientation="Vertical"  HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                            <TextBlock x:Name="Summoner10_Info" FontSize="25" FontWeight="SemiBold" IsTextSelectionEnabled="True" ></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanel_Summoner10_BattleTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner10_KDATags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="StackPanel_Summoner10_NiuMaTags" Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+    </ScrollViewer>
         
-        
-    </Grid>
 </Page>

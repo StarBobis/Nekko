@@ -46,7 +46,7 @@ namespace Nekko
             this.ExtendsContentIntoTitleBar = true;
 
             //设置标题
-            this.Title = "Nekko V1.0.0.3";
+            this.Title = "Nekko V1.0.0.4";
 
             //设置窗口大小
             //1111 814   

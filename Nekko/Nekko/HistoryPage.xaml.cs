@@ -221,82 +221,10 @@ namespace Nekko
 
             GameObject gameObject = battleInfo.gameObject;
 
-            Frame.Navigate(typeof(GameInfoPage));
+            Frame.Navigate(typeof(GameInfoPage),gameObject.GameId.ToString());
             MainWindow.CurrentWindow.navigationView.SelectedItem = MainWindow.CurrentWindow.navigationView.MenuItems[2];
 
-            TimerUtils.Start("GetGameInfoByGameId");
-            GameObject gameRecord = await LeagueClientUtils.GetGameInfoByGameId(gameObject.GameId.ToString());
-            TimerUtils.End("GetGameInfoByGameId");
-
-            int Index = 0;
-
-            foreach (ParticipantIdentity participantIdentity in gameRecord.ParticipantIdentities)
-            {
-                TimerUtils.Start("ReadSummonerRankRecordByPuuid");
-
-                List<GameObject> gameObjectList = await LeagueClientUtils.ReadSummonerRankRecordByPuuid(participantIdentity.ParticipantPlayer.Puuid);
-                string SummonerInfoString = "";
-                SummonerInfoString = SummonerInfoString + participantIdentity.ParticipantPlayer.GameName + "#" + participantIdentity.ParticipantPlayer.TagLine;
-
-                ParticipantStats participantStats = gameRecord.Participants[Index].ParticipantStats;
-                SummonerInfoString = SummonerInfoString + "  " + participantStats.Kills.ToString() + "/" + participantStats.Deaths.ToString() + "/" + participantStats.Assists.ToString();
-                TimerUtils.End("ReadSummonerRankRecordByPuuid");
-
-                if (participantIdentity.ParticipantId == 1)
-                {
-                    Summoner1_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner1_KDATags, StackPanel_Summoner1_BattleTags, StackPanel_Summoner1_NiuMaTags);
-                }
-                else if (participantIdentity.ParticipantId == 2)
-                {
-                    Summoner2_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner2_KDATags, StackPanel_Summoner2_BattleTags, StackPanel_Summoner2_NiuMaTags);
-                }
-                else if (participantIdentity.ParticipantId == 3)
-                {
-                    Summoner3_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner3_KDATags, StackPanel_Summoner3_BattleTags, StackPanel_Summoner3_NiuMaTags);
-                }
-                else if (participantIdentity.ParticipantId == 4)
-                {
-                    Summoner4_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner4_KDATags, StackPanel_Summoner4_BattleTags, StackPanel_Summoner4_NiuMaTags);
-                }
-                else if (participantIdentity.ParticipantId == 5)
-                {
-                    Summoner5_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner5_KDATags, StackPanel_Summoner5_BattleTags, StackPanel_Summoner5_NiuMaTags);
-                }
-
-                else if (participantIdentity.ParticipantId == 6)
-                {
-                    Summoner6_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner6_KDATags, StackPanel_Summoner6_BattleTags, StackPanel_Summoner6_NiuMaTags);
-                }
-
-                else if (participantIdentity.ParticipantId == 7)
-                {
-                    Summoner7_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner7_KDATags, StackPanel_Summoner7_BattleTags, StackPanel_Summoner7_NiuMaTags);
-                }
-
-                else if (participantIdentity.ParticipantId == 8)
-                {
-                    Summoner8_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner8_KDATags, StackPanel_Summoner8_BattleTags, StackPanel_Summoner8_NiuMaTags);
-                }
-                else if (participantIdentity.ParticipantId == 9)
-                {
-                    Summoner9_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner9_KDATags, StackPanel_Summoner9_BattleTags, StackPanel_Summoner9_NiuMaTags);
-                }
-                else if (participantIdentity.ParticipantId == 10)
-                {
-                    Summoner10_Info.Text = SummonerInfoString;
-                    XAMLHelper.SetStackPanelTags(gameObjectList, StackPanel_Summoner10_KDATags, StackPanel_Summoner10_BattleTags, StackPanel_Summoner10_NiuMaTags);
-                }
-                Index++;
-            }
+            
             
 
             //ContentFrame.Navigate(typeof(TargetPage), parameter);
