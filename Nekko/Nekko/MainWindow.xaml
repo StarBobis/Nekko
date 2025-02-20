@@ -25,8 +25,8 @@
             
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="NavigationViewItem_HomePage" Icon="Home" Content="主页" Tag="HomePage" />
-                <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯" Tag="HistoryPage" />
-                <NavigationViewItem x:Name="NavigationViewItem_GameInfoPage" Icon="Message" Content="对局详细信息" Tag="GameInfoPage" />
+                <NavigationViewItem x:Name="NavigationViewItem_HistoryPage" Icon="OtherUser" Content="生涯与战绩查询" Tag="HistoryPage" />
+                <NavigationViewItem x:Name="NavigationViewItem_GameInfoPage" Icon="Message" Content="指定对局详细信息" Tag="GameInfoPage" />
                 <NavigationViewItem x:Name="NavigationViewItem_RealTimeTeamPage" Icon="Edit" Content="英雄选择阶段队友查询" Tag="RealTimeTeamPage" />
             </NavigationView.MenuItems>
 

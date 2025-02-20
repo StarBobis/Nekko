@@ -202,7 +202,7 @@ namespace Nekko
             await SearchSummonerInfo();
         }
 
-        private async void Menu_BattleDetailInfo_Click(object sender, RoutedEventArgs e)
+        private void Menu_BattleDetailInfo_Click(object sender, RoutedEventArgs e)
         {
 
 
