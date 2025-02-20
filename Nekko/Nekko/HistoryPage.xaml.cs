@@ -200,7 +200,6 @@ namespace Nekko
         private async void Button_SearchSummonerByName_Click(object sender, RoutedEventArgs e)
         {
             await SearchSummonerInfo();
-            
         }
 
         private async void Menu_BattleDetailInfo_Click(object sender, RoutedEventArgs e)
@@ -221,6 +220,9 @@ namespace Nekko
             }
 
             GameObject gameObject = battleInfo.gameObject;
+
+            Frame.Navigate(typeof(GameInfoPage));
+            MainWindow.CurrentWindow.navigationView.SelectedItem = MainWindow.CurrentWindow.navigationView.MenuItems[2];
 
             TimerUtils.Start("GetGameInfoByGameId");
             GameObject gameRecord = await LeagueClientUtils.GetGameInfoByGameId(gameObject.GameId.ToString());

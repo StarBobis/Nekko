@@ -13,7 +13,7 @@
 	<ApplicationIcon>Assets\Nekko.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="GameInfo.xaml" />
+    <None Remove="GameInfoPage.xaml" />
     <None Remove="HistoryPage.xaml" />
     <None Remove="HomePage.xaml" />
     <None Remove="RealTimeTeamPage.xaml" />
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="GameInfo.xaml">
+    <Page Update="GameInfoPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

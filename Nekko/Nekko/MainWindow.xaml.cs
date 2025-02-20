@@ -34,9 +34,14 @@ namespace Nekko
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public static MainWindow CurrentWindow;
+        public NavigationView navigationView => nvSample;
+
         public MainWindow()
         {
             this.InitializeComponent();
+            CurrentWindow = this;
+
             MoveWindowToCenterScreen();
             this.ExtendsContentIntoTitleBar = true;
 
@@ -79,9 +84,16 @@ namespace Nekko
                     case "HistoryPage":
                         pageType = typeof(HistoryPage);
                         break;
+
+                    //GameInfoPage
+                    case "GameInfoPage":
+                        pageType = typeof(GameInfoPage);
+                        break;
+
                     case "RealTimeTeamPage":
                         pageType = typeof(RealTimeTeamPage);
                         break;
+                    
                 }
 
                 if (pageType != null && contentFrame.Content?.GetType() != pageType)
