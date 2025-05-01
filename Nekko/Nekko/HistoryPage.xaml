@@ -25,6 +25,13 @@
     
     <!-- 支持滑条，不然显示不完全 -->
     <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer.Background>
+            <AcrylicBrush 
+         TintColor="Black" 
+         TintOpacity="0.6" 
+         FallbackColor="LightBlue" 
+         />
+        </ScrollViewer.Background>
         <Grid>
             <Grid.ColumnDefinitions>
                 <!-- 单列布局 -->
